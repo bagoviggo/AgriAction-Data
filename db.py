@@ -20,3 +20,11 @@ def log_message(conn, ward_id: str, module: str, content: str, status: str):
             (ward_id, module, content, status),
         )
     conn.commit()
+
+def get_active_wards(conn) -> list[dict]:
+    if conn is None:
+        return []
+    with conn.cursor() as cur:
+        cur.execute('SELECT id, name, lat, lon FROM "Ward"')
+        rows = cur.fetchall()
+    return [{"id": r[0], "name": r[1], "lat": r[2], "lon": r[3]} for r in rows]
